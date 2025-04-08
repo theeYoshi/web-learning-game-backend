@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Interactive Learning Game</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<!-- Background canvas for ASCII art animation -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- Hero Section: minimal yet sophisticated -->
 <div class="hero">
     <h1 class="fade-in">Interactive Learning Game</h1>
-    <button id="startBtn" class="fade-in" style="animation-delay: 0.5s;">Play Now</button>
+    <!-- Buttons to load games -->
+    <button id="drawingGameBtn" class="fade-in" style="animation-delay: 0.5s;">
+        Play Drawing Game
+    </button>
+    <button id="asciiRunnerBtn" class="fade-in" style="animation-delay: 0.7s;">
+        Play ASCII Runner
+    </button>
 </div>
 
-<!-- Game container hidden until user clicks "Play Now" -->
-<div id="gameContainer" class="hidden">
-    <div id="challenge" class="challenge"></div>
-    <input type="text" id="answer" placeholder="Your answer here">
-    <button id="submitBtn">Submit</button>
-    <div id="feedback"></div>
-</div>
+<!-- Game container: where your game will load -->
+<div id="gameContainer" class="hidden"></div>
 
-<script src="script.js"></script>
+<!-- Load the core script as an ES module -->
+<script type="module" src="script.js"></script>
+<!-- Load homepage background animation -->
+<script type="module" src="homeAnimation.js"></script>
 </body>
 </html>

@@ -1,0 +1,28 @@
+# Ignore everything by default
+*
+
+# But don't ignore directories (allow listing directories)
+!*/
+
+.idea/
+
+# Unignore the .gitignore file itself so it’s tracked
+!.gitignore
+
+# Unignore frontend folder and its content
+!frontend/
+!frontend/**/*
+
+# Unignore backend folder and its content
+!backend/
+!backend/**/*
+
+# Additional ignores for your Go backend:
+# Ignore compiled binary files (you can customize based on your naming conventions)
+backend/*.exe
+backend/*.out
+backend/*.bin
+
+# Ignore common system files
+.DS_Store
+Thumbs.db

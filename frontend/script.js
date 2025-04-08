@@ -1,38 +1,30 @@
+// script.js
+
 document.addEventListener('DOMContentLoaded', () => {
-    const startBtn = document.getElementById('startBtn');
+    const drawingGameBtn = document.getElementById('drawingGameBtn');
+    const asciiRunnerBtn = document.getElementById('asciiRunnerBtn');
     const gameContainer = document.getElementById('gameContainer');
-    const challengeDiv = document.getElementById('challenge');
-    const submitBtn = document.getElementById('submitBtn');
-    const answerInput = document.getElementById('answer');
-    const feedbackDiv = document.getElementById('feedback');
+    const hero = document.querySelector('.hero');
 
-    startBtn.addEventListener('click', () => {
-        // Hide the hero section and show the game container
-        document.querySelector('.hero').classList.add('hidden');
+    // Button to load the drawing game (if you want to keep this option)
+    drawingGameBtn.addEventListener('click', () => {
+        hero.classList.add('hidden');
         gameContainer.classList.remove('hidden');
-        fetchChallenge();
-    });
-
-    submitBtn.addEventListener('click', () => {
-        const userAnswer = answerInput.value.trim().toLowerCase();
-        // For prototype purposes: using "test" as the expected answer
-        if (userAnswer === 'test') {
-            feedbackDiv.textContent = 'Correct!';
-        } else {
-            feedbackDiv.textContent = 'Try again!';
-        }
-    });
-
-    function fetchChallenge() {
-        // Fetch challenge from the backend API endpoint
-        fetch('/api/challenge')
-            .then(response => response.json())
-            .then(data => {
-                challengeDiv.textContent = data.question || 'Default challenge text.';
+        import('./games/drawingGame.js')
+            .then(module => {
+                module.initDrawingGame('gameContainer');
             })
-            .catch(error => {
-                console.error('Error fetching challenge:', error);
-                challengeDiv.textContent = 'Error loading challenge.';
-            });
-    }
+            .catch(err => console.error('Failed to load Drawing Game:', err));
+    });
+
+    // Button to load the ASCII Runner game
+    asciiRunnerBtn.addEventListener('click', () => {
+        hero.classList.add('hidden');
+        gameContainer.classList.remove('hidden');
+        import('./games/asciiRunner.js')
+            .then(module => {
+                module.initAsciiRunner('gameContainer');
+            })
+            .catch(err => console.error('Failed to load ASCII Runner:', err));
+    });
 });
