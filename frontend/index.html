@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interactive Learning Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hero">
+    <h1 class="fade-in">Interactive Learning Game</h1>
+    <button id="startBtn" class="fade-in" style="animation-delay: 0.5s;">Play Now</button>
+</div>
+
+<!-- Game container hidden until user clicks "Play Now" -->
+<div id="gameContainer" class="hidden">
+    <div id="challenge" class="challenge"></div>
+    <input type="text" id="answer" placeholder="Your answer here">
+    <button id="submitBtn">Submit</button>
+    <div id="feedback"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
