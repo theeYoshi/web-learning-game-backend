@@ -1,99 +1,108 @@
 // asciiRunner.js
 
-// Export the init function for the ASCII Runner game
 export function initAsciiRunner(containerId) {
     const container = document.getElementById(containerId);
 
-    // Insert a canvas element for the game
+    // Create the canvas for the game
     container.innerHTML = '<canvas id="asciiRunnerCanvas"></canvas>';
     const canvas = document.getElementById("asciiRunnerCanvas");
     const ctx = canvas.getContext("2d");
 
-    // Set canvas dimensions to fill container
     canvas.width = container.clientWidth;
     canvas.height = container.clientHeight;
     ctx.font = "20px monospace";
 
     // Game variables
     let playerX = 50;
-    let playerY = canvas.height - 40; // initial ground level
+    let playerY = canvas.height - 40; // ground level
     let jumpVelocity = 0;
-    let isJumping = false;
-    let obstacles = [];  // Array to store obstacles
-
-    // Game loop variables
+    let jumpCount = 0;  // allow up to two jumps (double jump)
+    let obstacles = [];  // array to store obstacles; each obstacle will have { x, y, passed }
+    let score = 0;
     let gameSpeed = 2;
 
-    // Listen for key events for jump (spacebar)
+    // Color settings
+    const bgColor = "#111";        // dark background
+    const playerColor = "#1a73e8";  // deep blue for the player (@)
+    const obstacleColor = "#e84545"; // red for obstacles (#)
+    const scoreColor = "#ffffff";  // white for score
+
+    // Jump event: allow double jump using the spacebar
     window.addEventListener("keydown", (e) => {
-        if (e.code === "Space" && !isJumping) {
-            isJumping = true;
-            jumpVelocity = -10;
+        if (e.code === "Space") {
+            if (jumpCount < 2) {
+                jumpVelocity = jumpCount === 0 ? -12 : -10;
+                jumpCount++;
+            }
         }
     });
 
-    // Main game loop
     function gameLoop() {
-        // Clear the canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Paint the dark background
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Update player position (simulate jump physics)
-        if (isJumping) {
+        // Update player position (gravity and jump physics)
+        if (playerY < canvas.height - 40 || jumpVelocity < 0) {
             playerY += jumpVelocity;
-            jumpVelocity += 0.5; // gravity effect
-            // Reset jump when player lands on ground
-            if (playerY >= canvas.height - 40) {
-                playerY = canvas.height - 40;
-                isJumping = false;
-                jumpVelocity = 0;
-            }
+            jumpVelocity += 0.5;
+        } else {
+            playerY = canvas.height - 40;
+            jumpVelocity = 0;
+            jumpCount = 0;
         }
 
-        // Draw the player (@ character)
-        ctx.fillStyle = "#007BFF";
+        // Draw the player (@)
+        ctx.fillStyle = playerColor;
         ctx.fillText("@", playerX, playerY);
 
-        // Update and draw obstacles (represented by "#")
-        // Move obstacles leftwards
+        // Update obstacles: move them left and remove if off-screen
         obstacles = obstacles.map(obstacle => ({...obstacle, x: obstacle.x - gameSpeed}));
-        // Remove obstacles that have moved off-screen
         if (obstacles.length && obstacles[0].x < -20) obstacles.shift();
 
         obstacles.forEach(obstacle => {
-            ctx.fillStyle = "#FF0000";
+            ctx.fillStyle = obstacleColor;
             ctx.fillText("#", obstacle.x, obstacle.y);
         });
 
-        // Randomly generate a new obstacle
+        // Generate new obstacle with a chance, add a 'passed' flag
         if (Math.random() < 0.02) {
-            obstacles.push({ x: canvas.width, y: canvas.height - 40 });
+            obstacles.push({ x: canvas.width, y: canvas.height - 40, passed: false });
         }
 
-        // Simple collision detection
+        // Check if the player has successfully passed an obstacle to increase score
         obstacles.forEach(obstacle => {
-            // If obstacle is near the player horizontally and player is low (not jumping high enough)
+            if (!obstacle.passed && obstacle.x + 20 < playerX) {
+                obstacle.passed = true;
+                score++;
+            }
+        });
+
+        // Collision detection: if player is too low when an obstacle is near
+        obstacles.forEach(obstacle => {
             if (
                 obstacle.x < playerX + 20 &&
                 obstacle.x > playerX - 20 &&
                 playerY > canvas.height - 60
             ) {
-                // Collision detected: reset game
                 resetGame();
             }
         });
 
+        // Display the score on the top left
+        ctx.fillStyle = scoreColor;
+        ctx.fillText("Score: " + score, 10, 30);
+
         requestAnimationFrame(gameLoop);
     }
 
-    // Reset function to restart the game after a collision
     function resetGame() {
         playerY = canvas.height - 40;
-        isJumping = false;
         jumpVelocity = 0;
+        jumpCount = 0;
         obstacles = [];
-        // Optionally you could add a “Game Over” message here.
+        score = 0;
     }
 
-    // Start the game loop
     gameLoop();
 }

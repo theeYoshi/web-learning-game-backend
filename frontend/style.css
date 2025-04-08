@@ -44,23 +44,26 @@ body {
     }
 }
 
-/* Button Styling */
+/* Updated Button Styling */
 button {
     padding: 1em 2em;
-    background-color: #007BFF;
-    border: none;
+    background-color: #000;       /* Black background */
+    border: 2px solid #fff;       /* White outline */
     border-radius: 5px;
-    color: white;
+    color: #fff;
     font-size: 1em;
     cursor: pointer;
     margin: 10px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 button:hover {
     transform: scale(1.05);
-    background-color: #0056b3;
+    background-color: #fff;
+    border-color: #000;
+    color: #000;
 }
+
 
 /* Game container styling */
 .hidden {
